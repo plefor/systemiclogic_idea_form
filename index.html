@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head> 
+<body class="container">
+<div class="row">
+<div class="hidden-xs hidden-sm col-md-3"></div>
+<div class="col-xs-12 col-md-6">  
+<form class="container-fluid form-horizontal" id="form" action="https://httpbin.org/post" method="post" target="test">
+<h1 class="form-group">Idea form</h1>
+<div class="form-group bg-warning" id="errorDiv" style="display:none;padding: 10px;"> 
+ <p class="lead">There was an error submitting your form</p>
+ <p>Please check your Internet connection and try again</p>
+ <p>If this problem persists, please contact our support</p>
+ </div> 
+<p class="help-block">Required fields are followed by  <strong><abbr title="required">*</abbr></strong>.</p>
+<div class="form-group"><label class="control-label" class="control-label class="control-label"" for="title" >Email <strong><abbr title="required">*</abbr></strong> </label><input class="form-control" type="email" id="email" name="email" placeholder="email" required/></div>
+<fieldset>
+<legend>Idea Details</legend>
+<div class="form-group"><label class="control-label" for="title">Title <strong><abbr title="required">*</abbr></strong> </label><input class="form-control" type="text" id="title" name="title" placeholder="title" required/></div>
+<div class="form-group"><label class="control-label" style="vertical-align: top;" for="description">Description <strong><abbr title="required">*</abbr></strong> </label><textarea class="form-control" id="description" name="description" placeholder="description"  form="form" required></textarea></div>
+<div class="form-group"><label class="control-label" for="category">Category <strong><abbr title="required">*</abbr></strong> </label><select class="form-control" id="category" name="category" required>
+  <option disabled=true selected value=""> -- select a category -- </option>
+  <option value="incremental">Incremental</option>
+  <option value="disruptive">Disruptive</option>
+  <option value="radical">Radical</option>
+</select></div>
+<div class="form-group"><label class="control-label" for="image">Image </label><input class="form-control" type="file" id="image" name="image" accept=".gif, .jpg, .png"/></div>
+<div class="form-group">
+  <label class="control-label" for="privacy">Privacy</label>
+  <div class="radio"><label class="control-label" for="public"><input type="radio" id="public" name="privacy" value="public" checked>Public</label></div>
+  <div class="radio"><label class="control-label" for="private"><input type="radio" id="private" name="privacy" value="private">Private</label></div>
+</div>
+</fieldset>
+<div class="form-group checkbox"><label class="control-label" for="t&c"><input type="checkbox" id="t&c" name="t&c" value="1" required/> I accept the <a  href="#">Terms and Conditions</a> <strong><abbr title="required">*</abbr></strong></label></div><br>
+<div class="form-group"><input class="form-control btn btn-primary" id="myBtn" type="submit" value="Submit"> </div>
+</form> 
+<script type="text/javascript"> 
+$('#form')
+  .submit( function( e ) { 
+	document.getElementById("loadDiv").style.display = 'block';
+	document.getElementById("errorDiv").style.display = 'none';
+    $.ajax( {
+      url: 'https://httpbin.org/post',
+      type: 'POST',
+      data: new FormData( this ),
+      processData: false,
+      contentType: false
+    } )
+	  .done(function(data) {
+		document.getElementById("loadDiv").style.display = 'none';
+		if(typeof data.error === 'undefined')
+		{
+			document.getElementById("pre").innerText = JSON.stringify(data);
+			document.getElementById("form").style.display = 'none'; 
+			document.getElementById("iframeDiv").style.display = 'block';
+		}
+		else
+		{
+			document.getElementById("errorDiv").style.display = 'block';
+		}
+	  })
+	  .fail(function() {
+		document.getElementById("loadDiv").style.display = 'none';
+		document.getElementById("errorDiv").style.display = 'block';
+	  });
+    e.preventDefault();
+  } );
+ </script> 
+ <div id="iframeDiv" style="display:none"> 
+ <h1>Your form has been Submitted</h1> 
+ <p>Below you can view the JSON data of the POST request:</p> 
+ <pre id="pre"></pre>
+ </div>
+ <div style="position: fixed;left: 50%;top: 50%;display:none;" id="loadDiv"> 
+ <h2 style="padding: 10px;border-radius: 25px;" class="bg-info">Loading...</h2>
+ </div>
+ </div>
+ </div>
+ </body> 
+ </html>
